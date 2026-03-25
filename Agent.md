@@ -27,4 +27,6 @@
 
 プロンプト、エージェント、スキルを作成する際の詳細なルール（説明文への発火条件の記載など）は、以下のドキュメントを参照してください。
 
-*   [spec/agent-spec.md](./spec/agent-spec.md)
+*   [Agent Spec](./spec/agent-spec.md)
+*   [Prompt Spec](./spec/prompt-spec.md)
+*   [Skill Spec](./spec/skill-spec.md)
