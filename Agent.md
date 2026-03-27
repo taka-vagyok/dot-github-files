@@ -19,7 +19,7 @@
 * `prompts/`: ユーザーの開始点となるプロンプトファイル（拡張子: `.prompt.md`）。複雑なロジックは持たせないこと。
 * `agents/`: 特定の役割を持つ自律的な作業者の定義ファイル（拡張子: `.agent.md`）。
 * `skills/`: エージェントが手足として使う具体的なツールの実装。
-* `spec/`: 各コンポーネントの詳細な作成ルールを定めた仕様書（`agent-spec.md`, `prompt-spec.md`, `skill-spec.md`）。
+* `spec/`: 各コンポーネントの詳細な作成ルールや設計プロセスを定めた仕様書（`design-process-spec.md`, `agent-spec.md`, `prompt-spec.md`, `skill-spec.md`）。
 
 **命名規則**: 関連する作業をまとめる際は、対象ドメインやプロジェクトを示す接頭辞を付与すること（例: `[prefix]-[name].agent.md`）。
 
