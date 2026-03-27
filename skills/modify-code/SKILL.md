@@ -13,7 +13,11 @@ metadata:
 実行環境に応じて、ターミナルから以下のコマンドやスクリプト（または等価なツール）を使用してファイルの置換を実行してください。
 
 ### Windows (PowerShell) の場合
-`powershell -Command "(Get-Content -Encoding <fileencoding> -Path <filepath>) -replace '<old_name>', '<new_name>' | Set-Content -Encoding <fileencoding> -Path <filepath>"`
+PowerShellはバージョン（5.1とCore 6+）によって `-Encoding` の挙動（BOMの有無など）や指定可能な値が異なります。文字コード破壊を防ぐため、以下のコマンド例のように **.NET API** を使用して厳密にエンコーディングを指定・置換してください。
+
+* 例: UTF-8（BOMなし）の場合
+  `powershell -Command "$text = [System.IO.File]::ReadAllText('<filepath>', [System.Text.Encoding]::UTF8); $newText = $text -replace '\b<old_name>\b', '<new_name>'; [System.IO.File]::WriteAllText('<filepath>', $newText, [System.Text.Encoding]::new(20127))"`
+  *(※ `20127`は ASCII, `932`は Shift-JIS など環境に合わせて .NET エンコーディングクラスを調整)*
 
 ### Linux / macOS (Bash/sed) の場合
 `sed -i 's/\b<old_name>\b/<new_name>/g' <filepath>`
