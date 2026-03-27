@@ -15,7 +15,10 @@ metadata:
 1. **ビルド環境の検出:**
    現在のディレクトリやサブディレクトリを探索し、ビルドシステムを特定してください（例: `.sln`/`.vcxproj` がある場合は `MSBuild`、`Makefile` は `make`、`CMakeLists.txt` は `cmake`）。
 2. **ビルドコマンドの実行:**
-   特定したビルドシステムに合わせて、ビルドコマンドを実行してください。（例: `msbuild /t:Build /p:Configuration=Release`, `make -j4` 等）
+   実行環境と特定したビルドシステムに合わせて、以下の例のようなビルドコマンドを実行してください。
+   * **Windows (MSBuild の場合)**: `msbuild <Solution.sln> -t:Build -p:Configuration=Release`
+   * **Linux / macOS (Make の場合)**: `make -j$(nproc)`
+   * **クロスプラットフォーム (CMake の場合)**: `cmake --build .`
 3. **結果の解析と警告の選別:**
    ビルドの標準出力・標準エラー出力を確認します。**今回の修正によって新しく発生したエラーおよび警告のみ**を抽出してください。既存のコードに元から存在していた無関係な警告は無視し、絶対に修正対象に含めないでください。
 
