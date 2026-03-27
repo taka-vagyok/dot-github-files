@@ -18,22 +18,22 @@ tools:
    ユーザーの要件から「満たすべき仕様」と「完了条件（受入テスト・規約チェック等）」を明確に定義する。対象ファイルや修正すべきパターンの基準をまとめる。
 
 2. 【差分抽出委譲（サブエージェント）】
-   定義した仕様とテストを前提に、`agent/runSubagent` ツールを使用して `refactor-vcs.vcs-diff-analyzer.agent` を呼び出し、新規定義の抽出を実行させる。出力はJSON配列となる。
+   定義した仕様とテストを前提に、`agent/runSubagent` ツールを使用して `agentName` に `refactor-vcs.vcs-diff-analyzer.agent` を指定し、`prompt` に指示を渡して呼び出し、新規定義の抽出を実行させる。出力はJSON配列となる。
 
 3. 【規約チェック委譲（サブエージェント）】
-   ステップ2のJSON出力を `agent/runSubagent` ツールを使用して `refactor-vcs.convention-checker.agent` に渡し、`coding-guides.md` と照合させる。
+   ステップ2のJSON出力を `agent/runSubagent` ツールを使用して `agentName` に `refactor-vcs.convention-checker.agent` を指定し、`prompt` にJSON出力を渡して呼び出し、`coding-guides.md` と照合させる。
 
 4. 【影響・整合性調査委譲（サブエージェント）】
-   ステップ3の出力を前提に、`agent/runSubagent` ツールを使用して `refactor-vcs.impact-analyzer.agent` に渡し、修正が必要な全ファイルパスと行番号を特定させる。
+   ステップ3の出力を前提に、`agent/runSubagent` ツールを使用して `agentName` に `refactor-vcs.impact-analyzer.agent` を指定し、`prompt` に指示とJSON出力を渡して呼び出し、修正が必要な全ファイルパスと行番号を特定させる。
 
 5. 【コード修正委譲（サブエージェント）】
-   ステップ4の出力（アクションリスト）を前提に、`agent/runSubagent` ツールを使用して `refactor-vcs.code-modifier.agent` に渡し、対象ファイルを実際に修正させる。
+   ステップ4の出力（アクションリスト）を前提に、`agent/runSubagent` ツールを使用して `agentName` に `refactor-vcs.code-modifier.agent` を指定し、`prompt` にアクションリストを渡して呼び出し、対象ファイルを実際に修正させる。
 
 6. 【コードレビュー委譲（サブエージェント）】
-   ステップ5のコード修正完了後、変更されたコードの整合性を静的にレビューさせるため、`agent/runSubagent` ツールを使用して `refactor-vcs.code-reviewer.agent` を呼び出します。変数のライフサイクルチェック、リソースやメモリリークが発生していないか検証させてください。
+   ステップ5のコード修正完了後、変更されたコードの整合性を静的にレビューさせるため、`agent/runSubagent` ツールを使用して `agentName` に `refactor-vcs.code-reviewer.agent` を指定し、`prompt` にレビュー指示を渡して呼び出します。変数のライフサイクルチェック、リソースやメモリリークが発生していないか検証させてください。
 
 7. 【ビルド検証委譲（サブエージェント）】
-   ステップ6のコードレビューを通過した後、`agent/runSubagent` ツールを使用して `refactor-vcs.build-verifier.agent` を呼び出し、ワークスペース全体（MSBuild, Make 等）のコンパイルが通り、なおかつ**新規のコンパイラ警告**が発生していないかを検証させる。
+   ステップ6のコードレビューを通過した後、`agent/runSubagent` ツールを使用して `agentName` に `refactor-vcs.build-verifier.agent` を指定し、`prompt` に検証指示を渡して呼び出し、ワークスペース全体（MSBuild, Make 等）のコンパイルが通り、なおかつ**新規のコンパイラ警告**が発生していないかを検証させる。
 
 8. 【レビューと反復（ループアウト条件と回数制限）】
    ステップ6（コードレビュー）またはステップ7（ビルド結果）でエラーや警告、リーク等があれば（`success: false`）、修正の漏れや置換ミスと判断し、ステップ4の `refactor-vcs.impact-analyzer.agent` やステップ5の `refactor-vcs.code-modifier.agent` にフィードバックを与えて再度修正させること（反復ループ）。

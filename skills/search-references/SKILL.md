@@ -10,7 +10,13 @@ metadata:
 提示された名前の変更案（`suggested_name`）について、対象の呼び出し元や参照箇所をひとつ残らず特定するため、`grep` や `findstr` 等の CLI ツールを駆使してワークスペース全体を検索するスキルです。
 
 ## 使用手順
-ターミナルを使用して `grep` または `findstr` で検索を実行してください。
+ターミナルを使用して以下のコマンド（または環境に合った等価なコマンド）を実行し、対象の識別子を検索してください。
+
+### Git/Linux/macOS (Bash) の場合
+`git grep -n "\b<suggested_name>\b"` または `grep -rnw . -e "<suggested_name>"`
+
+### Windows (CMD/PowerShell) の場合
+`findstr /S /N /R "\<<suggested_name>\>" *.*`
 
 ### 検索対象の厳守事項
 1. **全体検索:** 単なる `.cpp` や `.h` だけでなく、Visual Studio ソリューションファイル (`.sln`) やプロジェクトファイル (`.vcxproj`)、Makefile、CMakeLists.txt、その他リソースファイルも含めて、システム全体で名前が使用されている箇所を漏れなく検索してください。
